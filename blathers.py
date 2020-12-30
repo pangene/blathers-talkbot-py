@@ -1,6 +1,6 @@
-import sqlite3, re
+import sqlite3, re, sys
 
-ENABLE_VERSION_SELECTION = False
+ENABLE_VERSION_SELECTION = True
 
 def connect_to_database(database):
     '''Connects to the dialogue.db database.'''
@@ -12,7 +12,7 @@ def table_to_dict(conn, table):
     '''Converts a two-column SQL table into a dictionary.'''
     result_dict = {}
     c = conn.cursor()
-    for col1, col2 in c.execute(f'SELECT * FROM {table}'):
+    for col1, col2 in c.execute(f'SELECT * FROM "{table}"'):
         result_dict[col1] = col2
     return result_dict
 
@@ -23,7 +23,16 @@ def print_single_sentence(string):
     sentences = sentences[:-1]
     sentences[0] = " " + sentences[0]
     while sentences:
-        input(sentences[0][1:] + '.')
+        current = sentences[0] + '.'
+        while current[0] in [' ', u'\u0020', '\n', '\t', u"\u00A0"]:
+            current = current[1:]
+        try:
+            if sentences[1][0] == '"':
+                current += '"'
+                sentences[1] = sentences[1][sentences[1].index('"') + 1:]
+        except IndexError:
+            pass
+        input(current)
         sentences = sentences[1:]
 
 
@@ -49,10 +58,10 @@ class Blathers:
     '''Blathers is a class that changes depending on game version.'''
 
     versions = [
-        # 'gamecube',
-        # 'wild_world',
-        # 'city_folk',
-        # 'new_leaf',
+        'animal_crossing',
+        'wild_world',
+        'city_folk',
+        'new_leaf',
         'new_horizons'
     ]
 
@@ -85,12 +94,13 @@ class Blathers:
         if self.version not in ('new_horizons', 'new_leaf') and choice == 3:
             choice = 4
         try:
-            creature = ['bug', 'fish', 'sea_creature', 'end'][choice - 1]
+            creature = ['bug', 'fish', 'deep-sea_creature', 'end'][choice - 1]
         except IndexError:
             print('Invalid choice.')
             self.root_dialogue()
         if creature == 'end':
             self.bye()
+            sys.exit()
         else:
             self.creature_dialogue(creature)
 
@@ -102,8 +112,11 @@ class Blathers:
             print(f'Oh wonderful! You would like to learn about a {creature}. \
                 They are marvellous things!')
         print(f'Which {creature} would you like to know about?')
+        table_name = f'{self.version}_{creature}s'
+        if creature == 'fish':
+            table_name = table_name[:-1]
         try:
-            dialogues = table_to_dict(self.connection, f'{self.version}_{creature}s')
+            dialogues = table_to_dict(self.connection, table_name)
         except sqlite3.OperationalError:
             raise NotImplementedError
         options = convert_to_options(dialogues.keys())
