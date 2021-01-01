@@ -43,10 +43,13 @@ def convert_to_options(list):
     return list
 
 
-def user_select(options, origin_func):
-    '''Returns user choice among given dialogue options.'''
-    for option in options:
+def print_options(options_list):
+    '''Prints out a list of options for the user to select with user select.'''
+    for option in options_list:
         print(option)
+
+def user_select(origin_func):
+    '''Returns user choice among given dialogue options.'''
     try:
         return int(input('Pick a number to proceed.\n'))
     except ValueError:
@@ -90,7 +93,8 @@ class Blathers:
             print(root_dialogues[self.version])
         else:
             print('Is there anything else I can help you with?')
-        choice = user_select(Blathers.root_player_options, self.root_dialogue)
+        print_options(Blathers.root_player_options)
+        choice = user_select(self.root_dialogue)
         if self.version not in ('new_horizons', 'new_leaf') and choice == 3:
             choice = 4
         try:
@@ -120,7 +124,8 @@ class Blathers:
         except sqlite3.OperationalError:
             raise NotImplementedError
         options = convert_to_options(dialogues.keys())
-        choice = user_select(options, lambda: self.creature_dialogue(creature))
+        print_options(options)
+        choice = user_select(lambda: self.creature_dialogue(creature))
         if choice != len(options):
             try:
                 description = list(dialogues.values())[choice - 1]
