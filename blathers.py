@@ -140,18 +140,23 @@ class Blathers:
         print('Goodbye then. Thank you for talking to me!')
 
 
+def version_select():
+    '''Returns user-selected version number.'''
+    for version_num, version in enumerate(Blathers.versions):
+        print(str(version_num + 1) + '. ' + version)
+    version_num = int(input('Which Blathers would you like to speak to?\n'))
+    try:
+        version = Blathers.versions[version_num-1]
+    except IndexError:
+        print('Invalid version number or version is unavailable. \
+            Restarting...\n')
+        main()
+    return version
+
 def main():
     print('Hello, and welcome to the Blathers talkbot.')
     if ENABLE_VERSION_SELECTION:
-        for version_num, version in enumerate(Blathers.versions):
-            print(version_num + 1, version)
-        version_num = int(input('Which Blathers would you like to speak to?\n'))
-        try:
-            version = Blathers.versions[version_num-1]
-        except IndexError:
-            print('Invalid version number or version is unavailable. \
-                Restarting...\n')
-            main()
+        version = version_select()
         blathers = Blathers(version)
     else:
         blathers = Blathers()
