@@ -18,7 +18,7 @@ The way this program is written, it is very simple to add or remove options when
 
 # The GUI implementation
 
-![GUI picture][https://github.com/pangene/blathers-talkbot-py/tree/main/readme_images/blathers_gui_img.png] "The Blathers Talkbot GUI"
+![GUI picture][https://github.com/pangene/blathers-talkbot-py/blob/main/readme_images/blathers_gui_img.png] "The Blathers Talkbot GUI"
 
 The graphical user interface is pretty straightforward. You pick what version of Blathers and what type of creature. The list of creatures updates as you make your selection. Then, pick your creature from the list, and press enter to read the description.
 
