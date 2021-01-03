@@ -13,6 +13,13 @@ CREATE TABLE root_dialogues AS
     SELECT "animal_crossing",
            "Welcome! Please, do come in! It's so very nice to see you!";
 
+UPDATE wild_world_fish
+  SET description = 
+    'This forgotten pond,
+observed by a lonely frog,
+drains slow, as my youth."
+That was a haiku, eh wot? Rather an incomprehensible one, but one nonetheless. Many find frogs repulsive, but they''re so prevalent, even poets sing of them!' 
+  WHERE name = 'Frog (fish)';
 -- To see how all the animal descriptions were found, see:
 -- https://github.com/pangene/acwiki-scraper
 

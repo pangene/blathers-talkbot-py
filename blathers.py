@@ -17,23 +17,27 @@ def table_to_dict(conn, table):
     return result_dict
 
 
+def get_version_creature_SQL_table(version, creature, connection):
+    '''Returns the appropriate version-creature SQL table as a dictionary.'''
+    table_name = f'{version}_{creature}s'
+    if creature == 'fish':
+        table_name = table_name[:-1]
+    try:
+        dialogues = table_to_dict(connection, table_name)
+    except sqlite3.OperationalError:
+        raise NotImplementedError
+    return dialogues
+
+def separate_to_single_sentences(string):
+    '''Returns a list of individual sentences within string.'''
+    return re.split(r'(?<!\w\.\w.)(?<![A-Z][a-z]\.)(?<=\.|\?|\!|\")\s',
+        string.replace('\n',' '))
+
+
 def print_single_sentence(string):
     '''Prints a single sentence in a string, requests user input to proceed.'''
-    sentences = re.split(r'[!?]+|(?<!\.)\.(?!\.)', string.replace('\n',''))
-    sentences = sentences[:-1]
-    sentences[0] = " " + sentences[0]
-    while sentences:
-        current = sentences[0] + '.'
-        while current[0] in [' ', u'\u0020', '\n', '\t', u"\u00A0"]:
-            current = current[1:]
-        try:
-            if sentences[1][0] == '"':
-                current += '"'
-                sentences[1] = sentences[1][sentences[1].index('"') + 1:]
-        except IndexError:
-            pass
-        input(current)
-        sentences = sentences[1:]
+    for sentence in separate_to_single_sentences(string):
+        input(sentence)
 
 
 def convert_to_options(list):
@@ -68,6 +72,8 @@ class Blathers:
         'new_horizons'
     ]
 
+    creatures = ['bug', 'fish', 'deep-sea_creature', 'end']
+
     root_player_options = [
         '1. Tell me more about a bug.',
         '2. Tell me more about a fish.',
@@ -98,7 +104,7 @@ class Blathers:
         if self.version not in ('new_horizons', 'new_leaf') and choice == 3:
             choice = 4
         try:
-            creature = ['bug', 'fish', 'deep-sea_creature', 'end'][choice - 1]
+            creature = Blathers.creatures[choice - 1]
         except IndexError:
             print('Invalid choice.')
             self.root_dialogue()
@@ -116,13 +122,8 @@ class Blathers:
             print(f'Oh wonderful! You would like to learn about a {creature}. \
                 They are marvellous things!')
         print(f'Which {creature} would you like to know about?')
-        table_name = f'{self.version}_{creature}s'
-        if creature == 'fish':
-            table_name = table_name[:-1]
-        try:
-            dialogues = table_to_dict(self.connection, table_name)
-        except sqlite3.OperationalError:
-            raise NotImplementedError
+        dialogues = get_version_creature_SQL_table(self.version,
+            creature, self.connection)
         options = convert_to_options(dialogues.keys())
         print_options(options)
         choice = user_select(lambda: self.creature_dialogue(creature))
