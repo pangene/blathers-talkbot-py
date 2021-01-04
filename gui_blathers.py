@@ -19,6 +19,7 @@ def display_text(string):
     textbox_text['state'] = tk.NORMAL
     textbox_text.delete(1.0, tk.END)
     textbox_text.insert(tk.END, string)
+    textbox_text['state'] = tk.DISABLED
 
 
 def beautify_text(string):
@@ -34,6 +35,7 @@ def change_version(new_version):
     update_type_buttons(version)
     update_creature_list()
 
+
 def change_type(new_type):
     '''Changes the type of creature being requested.'''
     global type_creature
@@ -46,7 +48,6 @@ def update_type_buttons(version):
     '''Changes which buttons are present based on game version.'''
     if version not in ['new_leaf', 'new_horizons']:
         creature_button_identities['deep-sea_creature']['state'] = tk.DISABLED
-        creature_button_identities['fg'] = 'grey'
         if type_creature == 'deep-sea_creature':
             change_type('fish')
     else:
@@ -64,6 +65,7 @@ def update_creature_list():
 
 
 def get_creature_description():
+    '''Gets creature description from SQL table.'''
     dialogues = blathers.get_version_creature_SQL_table(version,
         type_creature, connection)
     choice = creature_listbox.get(tk.ANCHOR)
@@ -71,6 +73,7 @@ def get_creature_description():
 
 
 def display_description():
+    '''Displays the description in the textbox.'''
     description = get_creature_description()
     display_text(description)
 
@@ -87,11 +90,13 @@ window.resizable(0, 0)
 window.option_add('*Font', FONT + ' 23')
 window.bind('<Return>', lambda x: display_description())
 
+
 # Set background image
 background_image = ImageTk.PhotoImage(Image.open(BACKGROUND_IMAGE))
 background_label = tk.Label(window, image=background_image)
 background_label.image = background_image
 background_label.place(x=0, y=0, relwidth=1, relheight=1)
+
 
 # Create version selection
 version_frame = tk.Frame(master=window, width=350, height=115, bg=TEXTBOX_COLOR)
