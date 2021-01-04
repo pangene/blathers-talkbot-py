@@ -12,15 +12,13 @@ FONT_COLOR = '#8A846E'
 BLATHERS_IMAGE = 'images/Blathers_NH.png'
 
 VERSIONS = blathers.Blathers.versions
-CREATURES = ['bug', 'fish', 'deep-sea_creature']
-
+CREATURES = blathers.Blathers.creatures[:3]
 
 def display_text(string):
     '''Displays text in the dialogue textbox.'''
     textbox_text['state'] = tk.NORMAL
     textbox_text.delete(1.0, tk.END)
     textbox_text.insert(tk.END, string)
-
 
 
 def beautify_text(string):
@@ -191,4 +189,3 @@ textbox_text.pack()
 
 display_text("Welcome to the Blathers talkbot GUI! After making your selection, press enter to read the description!")
 window.mainloop()
-
