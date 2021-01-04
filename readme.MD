@@ -1,15 +1,3 @@
-# Usage
-
-If for some reason you want to play with these programs:
-
-1. Download or clone this repository onto your machine
-
-2. Open your shell (terminal, bash, etc.)
-
-3. Move to the directory you downloaded
-
-4. Run ```python3 filename.py``` where filename.py is the implementation you want to run. The command-line implementation is blathers.py, the pretty GUI is gui_blathers.py, and the responsive GUI is responsive_gui_blathers.py
-
 # Introduction
 
 The Blathers talkbot is a way to hear the descriptions Blathers gives about all the various creatures found in Animal Crossing that you normally only hear when donating said creature. It functions for all the various versions of Animal Crossing and most of the creatures.
