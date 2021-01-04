@@ -59,3 +59,5 @@ After making the pretty GUI and violating many good practice standards of Tkinte
 * Make image appear in the GUI implementation. Again, images in tkinter are hard. Also, I would have to webscrape all those images.
 
 * Adding the remaining creatures to the database/fixing the messed up descriptions, which is really more about either improving my webscraper or manually adding them, which I have so far been too lazy to do.
+
+* Making the GUI into an executable. I tried to use PyInstaller for this, but I kept running into errors. I may try again later.
